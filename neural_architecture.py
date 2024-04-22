@@ -6,8 +6,13 @@
 '''
 
 import numpy as np
+import os 
+import shutil
+import read_write_parameters as RWP
 
+path = os.path.abspath("")
 def build_neural_net(neural_architecture):
+    
     
     def validity(): # validity check of the architecture
         layers = len(neural_architecture)
@@ -48,3 +53,22 @@ def build_neural_net(neural_architecture):
     for layer in range(layers):
         # bias vector for each node in the layer
         biases.append(generate_bias_vector(neural_architecture[layer]))
+    try:
+        # it creates the metadata folder for saving the metadatas and the weights and biases
+        os.mkdir(path + "/metadata")
+    except:
+        # in case the metadata folder has already exist (reminent from old neural network),
+        # it delete the metadata folder and then creates a new fresh metadata folder
+        shutil.rmtree(path + "/metadata")
+        os.mkdir(path + "/metadata")
+    
+    # save the neural architecture in the metadata
+    metadata_file = open(path + "/metadata/metadata.txt", "w")
+    architecture = ",".join([str(ele) for ele in neural_architecture])
+    metadata_file.write("nn_architecture:"+architecture)
+    metadata_file.close()
+
+    # saving the weights and biases
+    RWP.save_weights_biases(weights, biases)
+build_neural_net([1, 2, 1])
+
