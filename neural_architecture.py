@@ -70,5 +70,5 @@ def build_neural_net(neural_architecture):
 
     # saving the weights and biases
     RWP.save_weights_biases(weights, biases)
-build_neural_net([1, 2, 1])
+build_neural_net([1, 3, 4])
 

@@ -1,1 +1,1 @@
-nn_architecture:1,2,1
+nn_architecture:1,3,4
