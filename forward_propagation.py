@@ -12,22 +12,24 @@ with open(path + "/metadata.txt", "r") as mf:
 neural_architecture = [int(ele) for ele in neural_architecture]
 
 
-def forward_propagation(inputs):
+def forward_propagation(inputs, w, b, relu_alpha = 0.01): # input, weights, biases
+    
     # weighted inputs
     def weighted_input(inp, weight): # inp is the input to the layer and weight is the weights of that interface
         return np.matmul(inp, weight)
     
     def leakyReLU(arr):
         ans = []
-        alpha = 0.01
+        # relu_alpha = 0.01
         for ele in arr:
-            ans.append(max(alpha*ele, ele))
+            ans.append(max(relu_alpha*ele, ele))
         return ans
     
     # read the weights and biases from metadata folder
-    w, b = RWP.read_weights_biases()
+    # w, b = RWP.read_weights_biases()
     i = 1
-    output = []
+
+    layer_output = []
     for weight in w:
         # perform the weighted input summation
         weight_input = weighted_input(inputs, weight)
@@ -39,7 +41,7 @@ def forward_propagation(inputs):
         
         # perform activation
         inputs = leakyReLU(weight_input)
-        output = inputs
-    return output
-
-# print(forward_propagation([1]))
+        layer_output.append(inputs)
+    return layer_output
+# w, b = RWP.read_weights_biases()
+# print(forward_propagation([1], w, b))
