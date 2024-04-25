@@ -1,6 +1,52 @@
 # INTELJENCE Documentation
 Overview
 ## Algorithm
+### Forward Propagation
+Forward propagation of one interface:
+
+$O$ = $A$(sum of $weighted$ $inputs$ + $bias$), where $A$ is the activation function.
+
+In our case we will be dealing with **Leaky ReLU**,
+
+$$Leaky ReLU(x) = \begin{cases} x & \text{if } x \geq 0 \\\ \alpha\cdot x & \text{if } x < 0 \end{cases}$$
+
+> ⚠️ Through out the text we will be refering **Leaky ReLU** as simple **ReLU**
+
+$$O = ReLU \left(\sum i\cdot w + b \right)$$
+
+(add the figure of 3x2 layered network)
+
+Equation:
+
+$$O_1 = ReLU(I_1w_1 + I_2w_3 + I_3w_5 +b_1)$$
+
+$$O_2 = ReLU(I_1w_2 + I_2w_4 + I_3w_6 +b_2)$$
+
+**Matrix**
+
+$$Input, I = \begin{bmatrix} I_1 & I_2 & I_3 \end{bmatrix}_{1\times3}$$
+
+$$ Weight, W = \begin{bmatrix} w_1 & w_2 \\\ w_3 & w_4 \\\ w_5 & w_6 \end{bmatrix}_{3\times2}$$
+
+$$Bias, B = \begin{bmatrix} b_1 & b_2 \end{bmatrix}_{1\times2} $$
+
+$$Output, O = \begin{bmatrix} O_1 & O_2 \end{bmatrix}_{1\times2} $$
+
+**Summation of Weighted Input**
+
+$$\sum i\cdot w = \begin{bmatrix} I_1 & I_2 & I_3 \end{bmatrix} \times \begin{bmatrix} w_1 & w_2 \\\ w_3 & w_4 \\\ w_5 & w_6 \end{bmatrix} = \begin{bmatrix} I_1w_1 + I_2w_3 + I_3w_5 & I_1w_2 + I_2w_4 + I_3w_6 \end{bmatrix} $$
+
+**Adding Bias Term**
+
+$$\sum (i\cdot w) + b = \begin{bmatrix} I_1w_1 + I_2w_3 + I_3w_5 & I_1w_2 + I_2w_4 + I_3w_6 \end{bmatrix} + \begin{bmatrix} b_1 & b_2 \end{bmatrix} = \begin{bmatrix} I_1w_1 + I_2w_3 + I_3w_5 + b_1 & I_1w_2 + I_2w_4 + I_3w_6 + b_2\end{bmatrix}$$
+
+$$ReLU \left(\sum (i\cdot w ) + b \right) = ReLU \left( \begin{bmatrix} I_1w_1 + I_2w_3 + I_3w_5 + b_1 & I_1w_2 + I_2w_4 + I_3w_6 + b_2\end{bmatrix} \right)$$
+
+$$O = \begin{bmatrix} O_1 & O_2 \end{bmatrix} = \begin{bmatrix} ReLU(I_1w_1 + I_2w_3 + I_3w_5 + b_1) & ReLU(I_1w_2 + I_2w_4 + I_3w_6 + b_2)\end{bmatrix}$$
+
+**In Terms of matrices**
+
+$$O = ReLU \left(I \times W + B \right)$$
 ### Backpropagation and Regularization
 (add the figure of 3x2 layered network)
 Equation:
