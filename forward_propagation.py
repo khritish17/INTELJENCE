@@ -21,7 +21,7 @@ def forward_propagation(inputs, weights, biases, relu_alpha = 0.01):
     # with forward propagation, but a matrix multiplication can not be done or not feasible when
     # input is array of dimension 1 and weight is an array of dimension 2
     i = 1
-    layer_output = []
+    layer_output = [inputs]
     for weight in weights:
         bias = biases[i]
 
@@ -42,7 +42,7 @@ def forward_propagation(inputs, weights, biases, relu_alpha = 0.01):
     return layer_output
         
 
-w, b = RWP.read_weights_biases()
-i = np.zeros((1, 1))
-i[0][0] = 1
-forward_propagation(i, w, b)
+# w, b = RWP.read_weights_biases()
+# i = np.zeros((1, 1))
+# i[0][0] = 1
+# forward_propagation(i, w, b)

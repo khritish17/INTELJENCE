@@ -1,54 +1,47 @@
 import forward_propagation as fp
-import numpy as np
 import read_write_parameters as RWP
+import numpy as np
+import copy as cp
 
-def backpropagation(input, target, weights, biases):
-    
-    layer_output, relu_alpha = fp.forward_propagation(input, weights, biases)
-    i = len(layer_output) - 1
-    e = -1*(np.array(target) - np.array(layer_output[i]))
+def backpropagation(inputs, target, weights, biases, relu_alpha = 0.01, lr_weight = 0.01, lr_bias = 0.01):
+    layer_output = fp.forward_propagation(inputs, weights, biases)
+    error = target - layer_output[-1]
 
-    def get_relu_derivative(outputs, relu_alpha):
-        derivatives = []
-        for ele in outputs:
-            if ele >= 0:
-                derivatives.append(1)
-            else:
-                derivatives.append(relu_alpha)
-        return derivatives
+    i = len(weights) - 1
+    while i >= 0:
+        I = layer_output[i]
+        O = layer_output[i + 1]
+        W = weights[i]
+        B = biases[i + 1]
 
-    def transpose_1d(arr):
-        l = len(arr)
-        # we need to convert it to a l x 1 array
-        transposed_array = np.zeros((l, 1))
-        for i in range(l):
-            transposed_array[i][0] = arr[i]
-        return transposed_array
+        # dE/db = (-1.e.F)
+        F = cp.deepcopy(O)
+        row, col = F.shape
+        for r in range(row):
+            for c in range(col):
+                F[r][c] = 1 if F[r][c] >= 0 else relu_alpha
+        dE_by_db = -1*error*F
 
-    def convert_1d_to_2d(arr):
-        l = len(arr)
-        converted_array = np.zeros((1, l))
-        for i in range(l):
-            converted_array[0][i] = arr[i]
-        return converted_array
+        # dE/dw = I_transposed x (-1.e.F) = I_transposed x dE/db
+        I_transposed = I.T
+        dE_by_dW = np.matmul(I_transposed, dE_by_db)
+        
+        # error propagation to the next layer (in the reverse direction of the network)
+        error = np.matmul(error, weights[i].T)
 
+        # weight update
+        weights[i] -= lr_weight * dE_by_dW 
 
-    while i >= 1:
-        I = np.array(layer_output[i - 1]) # input for the current interface
-        O = np.array(layer_output[i]) # output for the current interface
-        weight = weights[i]
-        # dE/dw = I_transpose x (-1.e.F) = I_transpose x M, where M = (-1.e.F)
-        F = get_relu_derivative(O, relu_alpha)
-        M = e*F
-        input_transposed = transpose_1d(I) 
-        converted_M = convert_1d_to_2d(M)
-
-        dE_by_dW = np.matmul(input_transposed, converted_M)
-        dE_by_db = converted_M
-        print(dE_by_db)
-        print(dE_by_dW)
-        e = np.matmul(e, weight.T)
+        # bias update
+        biases[i + 1] -= lr_bias * dE_by_db
         i -= 1
+    return weights, biases
 
-w, b = RWP.read_weights_biases()
-backpropagation([1], [1, 2, 3, 4], w, b)
+
+# w, b = RWP.read_weights_biases()
+# i = np.zeros((1, 1))
+# t = np.zeros((1, 4))
+# t[0][0], t[0][1], t[0][2], t[0][3] = 1, 2, 3, 4
+# i[0][0] = 1
+# w, b = backpropagation(i, t, w, b)
+
