@@ -1,5 +1,6 @@
 import os
 import shutil
+import numpy as np
 
 
 path = os.path.abspath("") +"/metadata"
@@ -49,7 +50,14 @@ def read_weights_biases():
                     temp = temp.rstrip("\n").split(",")
                     temp = [float(ele) for ele in temp]
                     weight.append(temp)
-                weights.append(weight)
+                
+                # converting the weights into np array (2d)
+                row, col = len(weight), len(weight[0])
+                weight_np = np.zeros(shape = (row, col))
+                for r in range(row):
+                    for c in range(col):
+                        weight_np[r][c] = weight[r][c]
+                weights.append(weight_np)
         return weights
 
     def read_biases():
@@ -59,7 +67,10 @@ def read_weights_biases():
             for bias in temp:
                 bias = bias.rstrip("\n").split(",")
                 bias = [float(ele) for ele in bias]
-                biases.append(bias)
+                bias_np = np.zeros((1, len(bias)))
+                for i in range(len(bias)):
+                    bias_np[0][i] = bias[i]
+                biases.append(bias_np)
         return biases
             
     w = read_weights()
@@ -73,3 +84,4 @@ def export_weights_biases(destination_path):
     shutil.copy2(source_path_weights, destination_path)
     shutil.copy2(source_path_biases, destination_path)
     print("Export complete !!!")
+

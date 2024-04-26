@@ -1,23 +1,54 @@
 import forward_propagation as fp
 import numpy as np
+import read_write_parameters as RWP
 
-def backpropagation(input, target):
-    # 1. get the forward propagation output
-    layer_output = fp.forward_propagation(input)
-    i = len(layer_output) - 1
-    output = layer_output[i]
-
-    # converting list to numpy array for leaverising numpy maths power
-    output = np.array(output)
-    target = np.array(target)
+def backpropagation(input, target, weights, biases):
     
-    # 2. Compute the error, e and error function E
-    error = target - output
-    se_error = error ** 2 # squared error = (target- error)^2
-        
-    # 3. Update weight through gradient descent
-    # 4. Propagate the error to the next layer
-    # (note here next layer means the previous 
-    # layer as we are traversing in the reverse direction of the network)
-    pass
-backpropagation([1], [1, 2, 3, 4])
+    layer_output, relu_alpha = fp.forward_propagation(input, weights, biases)
+    i = len(layer_output) - 1
+    e = -1*(np.array(target) - np.array(layer_output[i]))
+
+    def get_relu_derivative(outputs, relu_alpha):
+        derivatives = []
+        for ele in outputs:
+            if ele >= 0:
+                derivatives.append(1)
+            else:
+                derivatives.append(relu_alpha)
+        return derivatives
+
+    def transpose_1d(arr):
+        l = len(arr)
+        # we need to convert it to a l x 1 array
+        transposed_array = np.zeros((l, 1))
+        for i in range(l):
+            transposed_array[i][0] = arr[i]
+        return transposed_array
+
+    def convert_1d_to_2d(arr):
+        l = len(arr)
+        converted_array = np.zeros((1, l))
+        for i in range(l):
+            converted_array[0][i] = arr[i]
+        return converted_array
+
+
+    while i >= 1:
+        I = np.array(layer_output[i - 1]) # input for the current interface
+        O = np.array(layer_output[i]) # output for the current interface
+        weight = weights[i]
+        # dE/dw = I_transpose x (-1.e.F) = I_transpose x M, where M = (-1.e.F)
+        F = get_relu_derivative(O, relu_alpha)
+        M = e*F
+        input_transposed = transpose_1d(I) 
+        converted_M = convert_1d_to_2d(M)
+
+        dE_by_dW = np.matmul(input_transposed, converted_M)
+        dE_by_db = converted_M
+        print(dE_by_db)
+        print(dE_by_dW)
+        e = np.matmul(e, weight.T)
+        i -= 1
+
+w, b = RWP.read_weights_biases()
+backpropagation([1], [1, 2, 3, 4], w, b)
