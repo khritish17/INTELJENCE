@@ -14,17 +14,28 @@ def backpropagation(inputs, target, weights, biases, relu_alpha = 0.01, lr_weigh
         W = weights[i]
         B = biases[i + 1]
 
-        # dE/db = (-1.e.F)
-        F = cp.deepcopy(O)
-        row, col = F.shape
-        for r in range(row):
-            for c in range(col):
-                F[r][c] = 1 if F[r][c] >= 0 else relu_alpha
-        dE_by_db = -1*error*F
+        dE_by_db = None
+        dE_by_dW = None
+        
+        if i == len(weights) - 1:
+            # for softmax activation function
+            soft_diff = O *(1 - O)
+            dE_by_db = -1*error*soft_diff
+            I_transposed = I.T
+            dE_by_dW = np.matmul(I_transposed, dE_by_db)
+        else:
+            # for ReLU activation function
+            # dE/db = (-1.e.F)
+            F = cp.deepcopy(O)
+            row, col = F.shape
+            for r in range(row):
+                for c in range(col):
+                    F[r][c] = 1 if F[r][c] >= 0 else relu_alpha
+            dE_by_db = -1*error*F
 
-        # dE/dw = I_transposed x (-1.e.F) = I_transposed x dE/db
-        I_transposed = I.T
-        dE_by_dW = np.matmul(I_transposed, dE_by_db)
+            # dE/dw = I_transposed x (-1.e.F) = I_transposed x dE/db
+            I_transposed = I.T
+            dE_by_dW = np.matmul(I_transposed, dE_by_db)
         
         # error propagation to the next layer (in the reverse direction of the network)
         error = np.matmul(error, weights[i].T)
@@ -44,4 +55,3 @@ def backpropagation(inputs, target, weights, biases, relu_alpha = 0.01, lr_weigh
 # t[0][0], t[0][1], t[0][2], t[0][3] = 1, 2, 3, 4
 # i[0][0] = 1
 # w, b = backpropagation(i, t, w, b)
-
