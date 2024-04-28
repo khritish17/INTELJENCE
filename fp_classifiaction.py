@@ -11,7 +11,7 @@ with open(path + "/metadata.txt", "r") as mf:
     neural_architecture = temp[-1].split(",")
 neural_architecture = [int(ele) for ele in neural_architecture]
 
-def forward_propagation(inputs, weights, biases, relu_alpha = 0.01):
+def forward_propagation_classification(inputs, weights, biases, relu_alpha = 0.01):
     # Note: 
     # The input, weight and bias, needs to be an matrix rather than an array
     # e.g. input = [1, 2, 3], this is not acceptable as its an array, it needs to be a 2d 1 x 3 matrix
@@ -42,7 +42,9 @@ def forward_propagation(inputs, weights, biases, relu_alpha = 0.01):
                     denominator += np.exp(weighted_input_sum[r][c])
             for r in range(row):
                 for c in range(col):
+                    # applying softmax
                     weighted_input_sum[r][c] = np.exp(weighted_input_sum[r][c])/denominator
+
         else:
             # activation using leaky ReLU
             row, col = weighted_input_sum.shape
@@ -58,4 +60,4 @@ def forward_propagation(inputs, weights, biases, relu_alpha = 0.01):
 # w, b = RWP.read_weights_biases()
 # i = np.zeros((1, 1))
 # i[0][0] = 1
-# print(forward_propagation(i, w, b))
+# print(forward_propagation_classification(i, w, b))

@@ -1,11 +1,11 @@
-import forward_propagation as fp
+import fp_classifiaction as fp
 import read_write_parameters as RWP
 import numpy as np
 import copy as cp
 
-def backpropagation(inputs, target, weights, biases, relu_alpha = 0.01, lr_weight = 0.01, lr_bias = 0.01):
-    layer_output = fp.forward_propagation(inputs, weights, biases)
-    error = target - layer_output[-1]
+def backpropagation_classification(inputs, target, weights, biases, relu_alpha = 0.01, lr_weight = 0.01, lr_bias = 0.01):
+    layer_output = fp.forward_propagation_classification(inputs, weights, biases)
+    error = None
 
     i = len(weights) - 1
     while i >= 0:
@@ -19,10 +19,15 @@ def backpropagation(inputs, target, weights, biases, relu_alpha = 0.01, lr_weigh
         
         if i == len(weights) - 1:
             # for softmax activation function
-            soft_diff = O *(1 - O)
-            dE_by_db = -1*error*soft_diff
+            # soft_diff = O *(1 - O)
+            # dE_by_db = -1*error*soft_diff
+            # I_transposed = I.T
+            # dE_by_dW = np.matmul(I_transposed, dE_by_db)
+            dE_by_db = -1*target*(1 - O)
             I_transposed = I.T
             dE_by_dW = np.matmul(I_transposed, dE_by_db)
+            error = -1*target*np.log(O)
+
         else:
             # for ReLU activation function
             # dE/db = (-1.e.F)
@@ -49,9 +54,20 @@ def backpropagation(inputs, target, weights, biases, relu_alpha = 0.01, lr_weigh
     return weights, biases
 
 
-# w, b = RWP.read_weights_biases()
+w, b = RWP.read_weights_biases()
+# for ele in w:
+#     print(ele)
+# print("--")
+# for ele in b:
+#     print(ele)
 # i = np.zeros((1, 1))
 # t = np.zeros((1, 4))
 # t[0][0], t[0][1], t[0][2], t[0][3] = 1, 2, 3, 4
 # i[0][0] = 1
-# w, b = backpropagation(i, t, w, b)
+# w, b = backpropagation_classification(i, t, w, b)
+# print("==")
+# for ele in w:
+#     print(ele)
+# print("--")
+# for ele in b:
+#     print(ele)
