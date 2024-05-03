@@ -4,9 +4,13 @@ import numpy as np
 import copy as cp
 
 def backpropagation_regression(inputs, target, weights, biases, relu_alpha = 0.01, lr_weight = 0.01, lr_bias = 0.01):
-    layer_output = fp.forward_propagation_regression(inputs, weights, biases)
+    layer_output = fp.forward_propagation_regression(inputs, weights, biases, relu_alpha = 0.01)
     error = target - layer_output[-1]
-
+    final_error = 0
+    row, col = error.shape
+    for r in range(row):
+        for c in range(col):
+            final_error += (error[r][c])**2
     i = len(weights) - 1
     while i >= 0:
         I = layer_output[i]
@@ -39,7 +43,7 @@ def backpropagation_regression(inputs, target, weights, biases, relu_alpha = 0.0
         # bias update
         biases[i + 1] -= lr_bias * dE_by_db
         i -= 1
-    return weights, biases
+    return weights, biases, final_error
 
 
 # w, b = RWP.read_weights_biases()
@@ -52,10 +56,11 @@ def backpropagation_regression(inputs, target, weights, biases, relu_alpha = 0.0
 # t = np.zeros((1, 4))
 # t[0][0], t[0][1], t[0][2], t[0][3] = 1, 2, 3, 4
 # i[0][0] = 1
-# w, b = backpropagation_regression(i, t, w, b)
+# w, b, e = backpropagation_regression(i, t, w, b)
 # print("=====")
 # for ele in w:
 #     print(ele)
 # print("--")
 # for ele in b:
 #     print(ele)
+# print(e)

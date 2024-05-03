@@ -15,7 +15,7 @@ def forward_propagation_classification(inputs, weights, biases, relu_alpha = 0.0
     # Note: 
     # The input, weight and bias, needs to be an matrix rather than an array
     # e.g. input = [1, 2, 3], this is not acceptable as its an array, it needs to be a 2d 1 x 3 matrix
-    # hence the right way to represent is input = [[1], [2], [3]] as this is an 1 x 3 matrix
+    # hence the right way to represent is input = [[1, 2, 3]] as this is an 1 x 3 matrix
     # 
     # reason for doing so, we are required to multiply the input with weight, in order to procced 
     # with forward propagation, but a matrix multiplication can not be done or not feasible when
@@ -30,16 +30,19 @@ def forward_propagation_classification(inputs, weights, biases, relu_alpha = 0.0
         
         # addition of bias
         weighted_input_sum += bias
-        
+        # print(weighted_input_sum)
         # activation function
         if i == len(weights) - 1:
             # activation using softmax
             # classification problems
+
             row, col = weighted_input_sum.shape
+            print(weighted_input_sum)
             denominator = 0
             for r in range(row):
                 for c in range(col):
                     denominator += np.exp(weighted_input_sum[r][c])
+
             for r in range(row):
                 for c in range(col):
                     # applying softmax
