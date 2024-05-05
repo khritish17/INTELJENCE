@@ -1,6 +1,4 @@
-import backpropagation_classification as bkp_class
-import backpropagation_regression as bkp_reg
-import fp_classifiaction as fpc
+import classification_model as cm
 import numpy as np
 from matplotlib import pyplot as plt
 import read_write_parameters as rwp
@@ -16,7 +14,7 @@ class NeuralNetworkTrain:
         else:
             self.classification, self.regression = classification, regression
     
-    def train_model(self, inputs, target, weights, biases, epochs = 100, relu_alpha = 0.01, lr_weight = 0.01, lr_bias = 0.01):
+    def train_model(self, inputs, target, weights, biases, epochs = 100, lr_weight = 0.01, lr_bias = 0.01):
         if self.classification ^ self.regression == False:
             print("Choose a model first!!!")
         else:
@@ -51,26 +49,27 @@ class NeuralNetworkTrain:
                     for i in range(training_input.shape[0]):
                         input_data = training_input[i:i+1]
                         target_data = training_target[i:i+1]
-                        updated_weights, updated_biases, error = bkp_class.backpropagation_classification(input_data, target_data, weights, biases, relu_alpha = 0.01, lr_weight = 0.01, lr_bias = 0.01)
+                        updated_weights, updated_biases, error = cm.backpropagation_classification(input_data, target_data, weights, biases, lr_weight = 0.001, lr_bias = 0.001)
                         trained_weights = updated_weights
                         trained_biases = updated_biases
                         weights, biases = updated_weights, updated_biases
-                        print(weights)
+                        # print(weights)
                         training_error += error # remember for classification model we use croos entropy error function
                     
                     # validation of the neural network
                     for i in range(validation_input.shape[0]):
                         input_data = validation_input[i:i+1]
                         target_data = validation_target[i:i+1]
-                        layer_output = fpc.forward_propagation_classification(inputs= input_data, weights= trained_weights, biases= trained_biases, relu_alpha=relu_alpha)
+                        layer_output = cm.forward_propagation_classification(inputs= input_data, weights= trained_weights, biases= trained_biases)
                         O = layer_output[-1]
                         # if everything done correctly then the dimension of O should match with target
-                        # clipped_output = np.clip(O, 1e-8, 1 - 1e-8)
+                        clipped_output = np.clip(O, 1e-300, 1 - 1e-300)
                         rows, cols = O.shape
                         for r in range(rows):
                             for c in range(cols):
-                                validation_error += -1*target_data[r][c]*np.log(O[r][c])
-                                # validation_error += -1 * target_data[r][c] * np.log(clipped_output[r][c])
+                                # validation_error += -1*target_data[r][c]*np.log(O[r][c])
+                                validation_error += -1 * target_data[r][c] * np.log(clipped_output[r][c])
+                        # validation_error
                     
                     train_e.append(training_error)
                     validation_e.append(validation_error)
@@ -81,6 +80,8 @@ class NeuralNetworkTrain:
                 plt.plot(epoch, train_e, epoch, validation_e)
                 plt.title("Training error -VS- Validatin Error")
                 plt.legend(["Training Error", "Validation Error"])
+                plt.xlabel("Epochs")
+                plt.ylabel("Error")
                 plt.show()
 
 
@@ -99,5 +100,5 @@ inputs[0][0], inputs[1][0], inputs[2][0], inputs[3][0], inputs[4][0] = 1, 2, 2, 
 inputs[5][0], inputs[6][0], inputs[7][0], inputs[8][0], inputs[9][0] = 1, 2, 2, 2, 1
 targets[0][0], targets[1][1], targets[2][2], targets[3][3], targets[4][1] = 1, 1, 1, 1, 1
 targets[5][0], targets[6][3], targets[7][2], targets[8][3], targets[9][0] = 1, 1, 1, 1, 1
-nn.train_model(inputs, targets, w, b, epochs=50)
+nn.train_model(inputs, targets, w, b, epochs=100)
 
