@@ -1,13 +1,14 @@
 # INTELJENCE Documentation
 Overview
-## Algorithm
-### Neural Network: Multi-class classification model
-#### Activation Functions (used in Multi-class classification model)
-**1. Sigmoid Activation**
+
+## Neural Network: Multi-class classification model
+### Activation Functions (used in Multi-class classification model)
+#### 1. Sigmoid Activation (used in hidden layer neurons)
 
 $$Sigmoid(x) = \frac{1}{1 + e^{-x}}$$
 
-**2. Softmax Activation**
+#### 2. Softmax Activation (used in output layer neurons)
+
 
 $$Softmax(x_i) = \frac{e^{x_i}}{e^{x_1} + e^{x_2} +...+e^{x_n}}$$
 
@@ -38,7 +39,7 @@ $$\sum (i\cdot w) + b = \begin{bmatrix}I_1w_1 + I_2w_3 + I_3w_5 & I_1w_2 + I_2w_
 
 $$\sum (i\cdot w) + b = I \times W + B = W_{IB}$$
 
-For **Sigmoid Activation**
+For **Sigmoid Activation** (in hidden layers)
 
 $$O = Sigmoid \left(\sum i\cdot w + b \right) = Sigmoid \left(W_{IB} \right)$$
 
@@ -49,7 +50,7 @@ $$O = Sigmoid \left(\sum i\cdot w + b \right) = Sigmoid \left(W_{IB} \right)$$
 $$O = \begin{bmatrix} \frac{1}{1 + e^{-W_{IB1}}} & \frac{1}{1 + e^{-W_{IB2}}}\end{bmatrix}$$
 
 
-For **Softmax Activation**
+For **Softmax Activation** (in output layer)
 
 $$O = Softmax \left(\sum i\cdot w + b \right)$$
 
@@ -60,6 +61,19 @@ $$O = Softmax \left(\sum i\cdot w + b \right)$$
 $$O = \begin{bmatrix} \frac{e^{W_{IB1}}}{e^{W_{IB1}} + e^{W_{IB2}}} & \frac{e^{W_{IB2}}}{e^{W_{IB1}} + e^{W_{IB2}}}\end{bmatrix}$$
 
 ### Backpropagation
+In order to optimize the weights and biases, we will use gradient descent on both
+
+$$W_{updated} = W - LR \cdot \frac{\partial E}{\partial W}$$
+
+$$B_{updated} = B - LR \cdot \frac{\partial E}{\partial B}$$
+
+> LR is the Learning Rate, this value is set to 0.001 by default
+
+(3x2 figure)
+#### Hidden layer - Output Layer Interface
+Since the output layer uses the Softmax, the appropriate Error/Loss function is **Cross Entropy Loss**, E
+
+$$E = -\sum (t_i \cdot log(p_i))$$
 
 ## File: neural_architecture.py
 ### function: build_neural_net(neural_architecture)
