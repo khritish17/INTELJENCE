@@ -3,6 +3,7 @@ import classification_model as cm
 import neural_architecture as na
 import parameters_IO as pio
 from matplotlib import pyplot as plt
+import os 
 def one_hot_encode(number):
     encodedation = {0 : np.array([1, 0, 0, 0, 0, 0, 0, 0, 0, 0]), 1 : np.array([0, 1, 0, 0, 0, 0, 0, 0, 0, 0]),
                     2 : np.array([0, 0, 1, 0, 0, 0, 0, 0, 0, 0]), 3 : np.array([0, 0, 0, 1, 0, 0, 0, 0, 0, 0]),
@@ -11,8 +12,11 @@ def one_hot_encode(number):
                     8 : np.array([0, 0, 0, 0, 0, 0, 0, 0, 1, 0]), 9 : np.array([0, 0, 0, 0, 0, 0, 0, 0, 0, 1])}
     return encodedation[number]
 
-train_location = "D:\Codes\Projects\Inteljence\Dataset\mnist_train.csv"
-test_location = "D:\Codes\Projects\Inteljence\Dataset\mnist_test.csv"
+path = os.path.abspath("") + "\Dataset"
+
+train_location = path + "\mnist_train.csv"
+test_location = path + "\mnist_test.csv"
+
 def train_model(epoch = 1000):
     # read the csv file 'mnist_train.csv'
     mnist_train_file = open(train_location) # change the location of training data
