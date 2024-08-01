@@ -1,0 +1,1 @@
+nn_architecture:784,10,10
