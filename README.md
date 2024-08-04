@@ -6,6 +6,38 @@ A detailed mathematical explanation of artificial neural networks is provided in
   
 <-Introduction->
 
+## File: Neural_Networks_api.py
+### Description:
+
+This code defines a class called **NeuralNetwork** that provides a more user-friendly interface for training and testing multi-class classification models. Here's a breakdown of its functionalities:
+
+1. **Class Initialization**:
+- `__init__(self)`:
+  - Initializes the object with empty `weights` and `biases` attributes.
+  - Attempts to read pre-trained **weights** and **biases** from the `parameters_IO.py` module using `pio.read_weights_biases`. If no weights/biases are found, it gracefully handles the exception using `pass`
+2. **Neural Architecture**:
+- `neural_architecture(self, architecture)`:
+  - Takes a list `architecture` defining the number of neurons in each layer of the neural network.
+  - This function calls a function in `neural_architecture.py` to build the network structure.
+  - It's not directly used for training but its be helpful for setting up the network internally.
+3. **Training**:
+- `train(self, inputs, targets, epochs=1000, learning_rate=0.01)`:
+  - Takes training data (`inputs` and `targets`), number of epochs (`epochs`), and learning rate (`learning_rate`) as input.
+  - Stores the training data in `self.inputs` and `self.targets`.
+  - Creates a `Classification_Model` object (`model`) from `classification_model.py` using the provided data and any pre-trained weights/biases (if available).
+  - Calls the `model.training` function to train the neural network for the specified number of epochs with the given learning rate.
+4. **Testing**:
+- `test(self, test_input, test_target)`:
+  - Takes testing data point (`test_input`) and its corresponding target (`test_target`) as input.
+  - Reads the latest weights and biases using `pio.read_weights_biases`.
+  - Creates a `Classification_Model` object (`model`) with empty inputs and targets (weights and biases are loaded from the previous step).
+  - Calls the `model.testing` function to evaluate the model on the single test data point.
+5. **Saving Model**:
+- `save_as(self, location="")`:
+  - Takes an optional `location` argument specifying the path to save the model weights and biases.
+  - Uses `os.path.abspath` to get the absolute path of the provided location.
+  - Calls `pio.export_weights_biases` (from parameters_IO.py) to export the trained weights and biases to the specified location.
+
 ## File: parameters_IO.py
 ### Description:
 
