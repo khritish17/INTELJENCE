@@ -1,4 +1,9 @@
 # INTELJENCE Documentation
+A detailed mathematical explanation of artificial neural networks is provided in the article:
+- Title: **The Symphony of Neurons: A Mathematical Exposition on Artificial Neural Networks**
+- Author: **Khritish Kumar Behera**
+- Link: [https://drive.google.com/file/d/1vnVGqxBUYL0oOZeid1qzORUBc0Z6Xi1m/view?usp=sharing](https://drive.google.com/file/d/1vnVGqxBUYL0oOZeid1qzORUBc0Z6Xi1m/view?usp=sharing)
+  
 <-Introduction->
 
 ## File: parameters_IO.py
